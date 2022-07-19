@@ -44,4 +44,40 @@ ThemeData lightTheme = ThemeData(
       color: Colors.black,
     ),
   ),
+  iconTheme: IconThemeData(color: kPrimaryColor),
+);
+
+ThemeData darkTheme = ThemeData(
+  scaffoldBackgroundColor: Colors.grey.shade900,
+  colorScheme: ColorScheme.dark(),
+  appBarTheme: AppBarTheme(
+    titleSpacing: 20.0,
+    backgroundColor: Colors.grey.shade900,
+    iconTheme: IconThemeData(color: Colors.white),
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+      statusBarColor: Colors.grey.shade900,
+      statusBarIconBrightness: Brightness.light,
+    ),
+    elevation: 0.0,
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+  textTheme: TextTheme(
+    bodyText1: TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+    ),
+  ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: Colors.grey.shade700,
+  ),
+  iconTheme: IconThemeData(color: Colors.white),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: kPrimaryColor,
+  ),
 );

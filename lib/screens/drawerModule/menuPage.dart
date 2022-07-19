@@ -19,8 +19,8 @@ class MenuPage extends StatelessWidget {
         backgroundColor: Color.fromRGBO(7, 36, 81, 0),
         body: SafeArea(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
             CircleAvatar(
               backgroundColor: Color.fromRGBO(7, 36, 81, 0),
               radius: 60,
@@ -37,11 +37,9 @@ class MenuPage extends StatelessWidget {
               height: 5,
             ),
             ...MenuItems.all.map(buildMenuItem).toList(),
-            Spacer(
-              flex: 2,
-            ),
-          ],
-        )),
+            Spacer(),
+                    ],
+                  )),
       ),
     );
   }
@@ -69,6 +67,7 @@ class MenuItem {
 }
 
 class MenuItems {
+  static const home = MenuItem(Icons.home, 'Home');
   static const payment = MenuItem(Icons.payment, 'Payment');
   static const promos = MenuItem(Icons.card_giftcard, 'Promos');
   static const notifications =
@@ -77,6 +76,7 @@ class MenuItems {
   static const aboutUs = MenuItem(Icons.info_outline, 'About Us');
   static const rateUs = MenuItem(Icons.star_border, 'Rate Us');
   static const all = <MenuItem>[
+    home,
     payment,
     help,
     notifications,
@@ -88,15 +88,17 @@ class MenuItems {
 
 class MenuWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Builder(builder: (context) {
       return IconButton(
         onPressed: () {
           ZoomDrawer.of(context)!.toggle();
         },
-        icon: Icon(
-          Icons.menu,
-        ),
+        icon: ZoomDrawer.of(context)!.isOpen()
+            ? Icon(Icons.arrow_back)
+            : Icon(
+                Icons.menu,
+              ),
       );
     });
   }

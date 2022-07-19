@@ -40,193 +40,225 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return BlocProvider(
-      create: (context) => AppCubit()..createDatabase(),
-      child: BlocConsumer<AppCubit, AppStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var cubit = AppCubit.get(context);
-          List<Map> reminders = cubit.reminders;
-          return Scaffold(
-            key: scaffoldKey,
-            appBar: AppBar(
-              title: Text(
-                'Pill Reminder',
-              ),
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = AppCubit.get(context);
+        List<Map> reminders = cubit.reminders;
+        return Scaffold(
+          key: scaffoldKey,
+          appBar: AppBar(
+            title: Text(
+              'Pill Reminder',
             ),
-            body: ConditionalBuilder(
-              condition: cubit.reminders.isNotEmpty,
-              builder: (context) => reminderBuilder(reminders: cubit.reminders),
-              fallback: (context) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.menu,
+          ),
+          body: ConditionalBuilder(
+            condition: cubit.reminders.isNotEmpty,
+            builder: (context) => reminderBuilder(reminders: cubit.reminders),
+            fallback: (context) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.menu,
+                    color: Colors.grey,
+                    size: 100.0,
+                  ),
+                  Text(
+                    'No Reminders Yet, Please Add Some Reminders !',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       color: Colors.grey,
-                      size: 100.0,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                    Text(
-                      'No Reminders Yet, Please Add Some Reminders !',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                if (cubit.isBottomSheetShown) {
-                  if (formKey.currentState!.validate()) {
-                    addReminder(context);
-                  }
-                } else {
-                  try {
-                    scaffoldKey.currentState!
-                        .showBottomSheet((context) {
-                          return SingleChildScrollView(
-                            child: Form(
-                              key: formKey,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      height: height * 0.05,
-                                    ),
-                                    CustomTextField(
-                                      hint: 'Medicine Name',
-                                      icon: Icons.medication,
-                                      controller: pillController,
-                                      label: 'Medicine Name',
-                                      validate: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'please enter medicine name';
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              if (cubit.isBottomSheetShown) {
+                if (formKey.currentState!.validate()) {
+                  addReminder(context);
+                }
+              } else {
+                try {
+                  scaffoldKey.currentState!
+                      .showBottomSheet((context) {
+                        return SingleChildScrollView(
+                          child: Form(
+                            key: formKey,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppCubit.get(context).isDark
+                                    ? Colors.black54
+                                    : Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 1.0), //(x,y)
+                                    blurRadius: 2.0,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: height * 0.05,
+                                  ),
+                                  CustomTextField(
+                                    hint: 'Medicine Name',
+                                    icon: Icons.medication,
+                                    controller: pillController,
+                                    label: 'Medicine Name',
+                                    validate: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'please enter medicine name';
+                                      }
+                                    },
+                                    type: TextInputType.text,
+                                  ),
+                                  SizedBox(
+                                    height: height * 0.05,
+                                  ),
+                                  CustomTextField(
+                                    ontap: () async {
+                                      await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                      ).then((value) {
+                                        if (value!.hour == 0 ||
+                                            value.hour < 10) {
+                                          hour = "0${value.hour}";
+                                        } else {
+                                          hour = "${value.hour}";
                                         }
-                                      },
-                                      type: TextInputType.text,
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.05,
-                                    ),
-                                    CustomTextField(
-                                      ontap: () async {
-                                        await showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                        ).then((value) {
-                                          if (value!.hour == 0 ||
-                                              value.hour < 10) {
-                                            hour = "0${value.hour}";
-                                          } else {
-                                            hour = "${value.hour}";
-                                          }
-                                          if (value.minute == 0 ||
-                                              value.minute < 10) {
-                                            minute = "0${value.minute}";
-                                          } else {
-                                            minute = "${value.minute}";
-                                          }
-                                          timeController.text = "$hour:$minute";
-                                        });
-                                      },
-                                      hint: 'Time',
-                                      icon: Icons.watch_later,
-                                      controller: timeController,
-                                      label: 'Time',
-                                      validate: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'please enter time';
+                                        if (value.minute == 0 ||
+                                            value.minute < 10) {
+                                          minute = "0${value.minute}";
+                                        } else {
+                                          minute = "${value.minute}";
                                         }
-                                      },
-                                      type: TextInputType.datetime,
+                                        timeController.text = "$hour:$minute";
+                                      });
+                                    },
+                                    hint: 'Time',
+                                    icon: Icons.watch_later,
+                                    controller: timeController,
+                                    label: 'Time',
+                                    validate: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'please enter time';
+                                      }
+                                    },
+                                    type: TextInputType.datetime,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 40),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.warning_rounded),
+                                        Text(
+                                          "Please don\'t change time format",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      height: height * 0.05,
+                                  ),
+                                  SizedBox(
+                                    height: height * 0.05,
+                                  ),
+                                  CustomTextField(
+                                    ontap: () async {
+                                      await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime.parse("2023-01-01"),
+                                      ).then((value) {
+                                        dateController.text =
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(value!)
+                                                .toString();
+                                      });
+                                    },
+                                    hint: 'Date',
+                                    icon: Icons.calendar_month,
+                                    controller: dateController,
+                                    label: 'Date',
+                                    validate: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'please enter date';
+                                      }
+                                    },
+                                    type: TextInputType.datetime,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 40),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.warning_rounded),
+                                        Text(
+                                          "Please don\'t change date format",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    CustomTextField(
-                                      ontap: () async {
-                                        await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate:
-                                              DateTime.parse("2023-01-01"),
-                                        ).then((value) {
-                                          dateController.text =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(value!)
-                                                  .toString();
-                                        });
-                                      },
-                                      hint: 'Date',
-                                      icon: Icons.calendar_month,
-                                      controller: dateController,
-                                      label: 'Date',
-                                      validate: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'please enter date';
+                                  ),
+                                  SizedBox(
+                                    height: height * 0.05,
+                                  ),
+                                  defaultButton(
+                                    onPressed: () {
+                                      if (cubit.isBottomSheetShown) {
+                                        if (formKey.currentState!.validate()) {
+                                          addReminder(context);
                                         }
-                                      },
-                                      type: TextInputType.datetime,
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.05,
-                                    ),
-                                    defaultButton(
-                                      onPressed: () {
-                                        if (cubit.isBottomSheetShown) {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            addReminder(context);
-                                          }
-                                        }
-                                      },
-                                      text: 'Add Reminder',
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.05,
-                                    ),
-                                  ],
-                                ),
+                                      }
+                                    },
+                                    text: 'Add Reminder',
+                                  ),
+                                  SizedBox(
+                                    height: height * 0.05,
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        })
-                        .closed
-                        .then((value) {
-                          cubit.changeBottomSheet(
-                            isShow: false,
-                          );
-                        });
-                    cubit.changeBottomSheet(
-                      isShow: true,
-                    );
-                  } catch (error) {
-                    print(error.toString());
-                  }
+                          ),
+                        );
+                      })
+                      .closed
+                      .then((value) {
+                        cubit.changeBottomSheet(
+                          isShow: false,
+                        );
+                      });
+                  cubit.changeBottomSheet(
+                    isShow: true,
+                  );
+                } catch (error) {
+                  print(error.toString());
                 }
-              },
-              child: Icon(Icons.notification_add_rounded),
-            ),
-          );
-        },
-      ),
+              }
+            },
+            child: Icon(Icons.notification_add_rounded),
+          ),
+        );
+      },
     );
   }
 

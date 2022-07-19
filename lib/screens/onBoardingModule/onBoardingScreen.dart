@@ -3,7 +3,6 @@
 import 'package:first_app/components/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../components/components/components.dart';
 import '../../shared/shared_preference/cacheHelper.dart';
 import '../loginModule/loginScreen.dart';
@@ -32,18 +31,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     BoardingModel(
       body:
           'GLOBALLY, CARDIOVASCULAR DISEASES CLAIM NEARLY 17.9 MILLION LIVES EACH YEAR',
-      image: 'assets/images/onboard.jpg',
+      image: 'assets/images/onboarding.png',
       title: 'Welcome To MediaCare',
     ),
     BoardingModel(
       body:
           'EARLY DETECTION OF HEART DISEASE IS INSTRUMENTAL TO BRINGING THE FATALITY RATE DOWN',
-      image: 'assets/images/onboard.jpg',
+      image: 'assets/images/onboarding.png',
       title: 'Keep Aware!',
     ),
     BoardingModel(
       body: 'ENJOY OUR SERVICES, WE HOPE YOU GREAT HEALTH',
-      image: 'assets/images/onboard.jpg',
+      image: 'assets/images/onboarding.png',
       title: 'MediaCare Heart Monitoring Application',
     ),
   ];

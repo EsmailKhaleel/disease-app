@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:first_app/components/constants/constants.dart';
 import 'package:first_app/shared/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -35,7 +34,7 @@ Widget reminderCard(model, context) => Padding(
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 16,
-                    color: Colors.black45,
+                    // color: Colors.black45,
                   ),
                 ),
                 leading: Icon(
@@ -48,7 +47,7 @@ Widget reminderCard(model, context) => Padding(
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 25,
-                    color: Colors.black,
+                    // color: Colors.black,
                   ),
                 ),
                 subtitle: Column(
@@ -68,7 +67,7 @@ Widget reminderCard(model, context) => Padding(
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 20,
-                            color: Colors.black45,
+                            // color: Colors.black45,
                           ),
                         ),
                       ],

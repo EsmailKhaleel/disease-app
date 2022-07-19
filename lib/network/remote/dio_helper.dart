@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_null_in_if_null_operators
 
 import 'package:dio/dio.dart';
-import 'package:first_app/components/components/components.dart';
 import 'package:first_app/network/remote/exceptions_handler.dart';
 
 class DioHelper {
@@ -11,7 +10,7 @@ class DioHelper {
   static init() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://192.168.1.10:8080',
+        baseUrl: 'http://192.168.1.8:8080',
         receiveDataWhenStatusError: true,
       ),
     );
@@ -22,14 +21,12 @@ class DioHelper {
   static Future<Response> getData({
     required String url,
     Map<String, dynamic>? query,
-    String lang = 'en',
     String? token,
   }) async {
     print(token);
     dio.options.headers = {
-      'lang': lang,
       'Authorization': token ?? '',
-      'Content-Type': 'application/json',
+      'Accept': '*/*',
     };
     return await dio.get(
       url,

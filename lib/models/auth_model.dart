@@ -1,18 +1,29 @@
+
 class AuthModel {
   String? authToken;
-  String? refreshToken;
+  String? password;
+  String? email;
+  String? status;
+  String? error;
 
-  AuthModel({this.authToken, this.refreshToken});
+  AuthModel({this.authToken, this.password, this.email, this.status});
 
   AuthModel.fromJson(Map<String, dynamic> json) {
     authToken = json['authenticationToken'];
-    refreshToken = json['refreshToken'];
+    password = json['password'];
+    email = json['email'];
+    status = json['status'];
+    error = json['error'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['authenticationToken'] = this.authToken;
-    data['refreshToken'] = this.refreshToken;
+    data['password'] = this.password;
+    data['email'] = this.email;
+    data['status'] = this.status;
+    data['error'] = this.error;
     return data;
   }
 }
+

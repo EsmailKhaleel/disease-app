@@ -22,3 +22,23 @@ class AppDeleteDataBaseState extends AppStates {}
 class AppOpenDrawerSuccessState extends AppStates {}
 
 class AppOpenDrawerErrorState extends AppStates {}
+
+
+class LogoutInitialState extends AppStates {}
+
+class LogoutLoadingState extends AppStates {}
+
+class LogoutSuccessState extends AppStates {}
+
+class LogoutErrorState extends AppStates {
+  final String error;
+  LogoutErrorState( this.error);
+}
+class AppGetUserDataSuccessState extends AppStates {}
+
+class AppGetUserDataErrorState extends AppStates {}
+
+class AppGetUserDataLoadingState extends AppStates {}
+
+class AppChangeTheme extends AppStates {}
+

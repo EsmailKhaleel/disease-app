@@ -46,6 +46,5 @@ Color changeToastColor(ToastStates state) {
 }
 
 String? accessToken = '';
-String? refreshToken = '';
 
 

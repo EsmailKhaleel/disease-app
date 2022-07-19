@@ -5,10 +5,17 @@ import 'package:first_app/screens/homeModule/homePage.dart';
 import 'package:first_app/screens/profileModule/profileScreen.dart';
 import 'package:first_app/shared/cubit/states.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../components/components/components.dart';
+import '../../models/user_model.dart';
+import '../../network/remote/dio_helper.dart';
+import '../../network/remote/endPoints.dart';
+import '../shared_preference/cacheHelper.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
@@ -16,8 +23,8 @@ class AppCubit extends Cubit<AppStates> {
 
   List<String> titles = [
     'Home',
-    'History',
-    'My Profile',
+    'Prediction History',
+    'Me',
   ];
 
   List<Widget> screens = [
@@ -27,6 +34,7 @@ class AppCubit extends Cubit<AppStates> {
   ];
   int indexed = 0;
   void changeIndex(int index) {
+    getUserData();
     indexed = index;
     emit(AppChangeNavigationBarState());
   }
@@ -133,5 +141,45 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  bool isDark = false;
+  void changeTheme() {
+    isDark = !isDark;
+    emit(AppChangeTheme());
+  }
 
+  void userLogout({
+    required String? accessToken,
+  }) {
+    emit(LogoutLoadingState());
+    DioHelper.postData(
+      url: LOGOUT,
+      data: {
+        'jwtToken': accessToken,
+      },
+    ).then((value) {
+      String? message = value.data.toString();
+      CacheHelper.removeData(key: 'token');
+      emit(LogoutSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(LogoutErrorState(error.toString()));
+    });
+  }
+
+  UserDataModel? dataModel;
+  void getUserData() {
+    emit(AppGetUserDataLoadingState());
+    DioHelper.getData(
+      url: PROFILE,
+      token: accessToken,
+    ).then((value) {
+      dataModel = UserDataModel.fromJson(value.data);
+      print(dataModel!.email.toString());
+      print(dataModel!.firstName.toString());
+      emit(AppGetUserDataSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(AppGetUserDataErrorState());
+    });
+  }
 }

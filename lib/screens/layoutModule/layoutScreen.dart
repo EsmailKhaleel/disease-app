@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:first_app/components/constants/constants.dart';
 import 'package:first_app/screens/drawerModule/menuPage.dart';
 import 'package:first_app/screens/reminderModule/reminderScreen.dart';
 import 'package:first_app/shared/cubit/cubit.dart';
@@ -8,61 +9,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
-
 class LayoutScreen extends StatelessWidget {
   static final GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
   MenuItem currentItem = MenuItems.help;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AppCubit(),
-      child: BlocConsumer<AppCubit, AppStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var cubit = AppCubit.get(context);
-          return Scaffold(
-            key: scaffoldKey,
-            appBar: AppBar(
-              titleSpacing: 0,
-              title: Row(
-                children: [
-                  Text(
-                    cubit.titles[cubit.indexed],
-                  ),
-                  Spacer(),
-                  Text('MediaCare'),
-                ],
-              ),
-              leading: MenuWidget(),
-            ),
-            body: cubit.screens[cubit.indexed],
-            bottomNavigationBar: BottomNavigationBar(
-              onTap: (value) => cubit.changeIndex(value),
-              currentIndex: cubit.indexed,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home,
-                  ),
-                  label: 'Home',
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = AppCubit.get(context);
+        return Scaffold(
+          key: scaffoldKey,
+          appBar: AppBar(
+            titleSpacing: 0,
+            title: Row(
+              children: [
+                Text(
+                  cubit.titles[cubit.indexed],
+                  
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.history,
-                  ),
-                  label: 'History',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.account_circle_rounded,
-                  ),
-                  label: 'Profile',
-                ),
+                Spacer(),
+                Text('MediaCare'),
               ],
             ),
-          );
-        },
-      ),
+            leading: MenuWidget(),
+          ),
+          body: cubit.screens[cubit.indexed],
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: kPrimaryColor,
+            unselectedItemColor: kSecondaryColor.withOpacity(0.5),
+            onTap: (value) => cubit.changeIndex(value),
+            currentIndex: cubit.indexed,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                ),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.history,
+                ),
+                label: 'Medical History',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.account_circle_rounded,
+                ),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -109,6 +109,8 @@ class _MyDrawerState extends State<MyDrawer> {
     switch (currentItem) {
       case MenuItems.notifications:
         return ReminderScreen();
+      case MenuItems.home:
+        return LayoutScreen();
       default:
         return LayoutScreen();
     }

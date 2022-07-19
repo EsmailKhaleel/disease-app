@@ -1,15 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:first_app/components/constants/constants.dart';
 import 'package:first_app/components/widgets/customTextField.dart';
 import 'package:first_app/components/widgets/defaultButton.dart';
-import 'package:first_app/screens/homeModule/homePage.dart';
 import 'package:first_app/screens/layoutModule/layoutScreen.dart';
 
 import 'package:first_app/screens/loginModule/cubit/cubit.dart';
 import 'package:first_app/screens/loginModule/cubit/states.dart';
 import 'package:first_app/screens/signupModule/signupScreen.dart';
+import 'package:first_app/shared/shared_preference/cacheHelper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,9 +38,17 @@ class _LoginScreenState extends State<LoginScreen> {
             showToast(text: state.error.toString(), state: ToastStates.ERROR);
           }
           if (state is LoginSuccessState) {
-            showToast(
-                text: 'Successfully Signed In', state: ToastStates.SUCCESS);
-            navigateNoBack(context, LayoutScreen());
+            if (state.model.status == "true") {
+              CacheHelper.saveData(key: 'token', value: state.model.authToken!)
+                  .then((value) {
+                accessToken = state.model.authToken;
+              });
+              showToast(
+                  text: 'Successfully Signed In', state: ToastStates.SUCCESS);
+              navigateNoBack(context, MyDrawer());
+            } else {
+              showToast(text: state.model.error!, state: ToastStates.ERROR);
+            }
           }
         },
         builder: (context, state) => Scaffold(
@@ -75,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 25,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'Pacifico',
-                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -158,6 +164,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: height * 0.05,
                 ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Forgot Password ?',
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -177,7 +193,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         ' Regitser Now',
                         style: TextStyle(
-                          color: Colors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.normal,
                         ),

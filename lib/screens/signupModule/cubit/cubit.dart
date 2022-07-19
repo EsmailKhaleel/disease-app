@@ -21,7 +21,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
     required String lastName,
     required int id,
   }) async {
-    emit(SignUpLoadingState());
+    // emit(SignUpLoadingState());
 
     DioHelper.postData(url: REGISTER, data: {
       'email': email,
@@ -31,10 +31,9 @@ class SignUpCubit extends Cubit<SignUpStates> {
       'lastName': lastName,
       'id': id,
     }).then((value) {
-      emit(SignUpSuccessState());
       model = AuthModel.fromJson(value.data);
-      print(model!.authToken);
-      print(model!.refreshToken);
+      // print(model!.authToken);
+      emit(SignUpSuccessState(model!));
     }).catchError((error) {
       print(error.toString());
       emit(SignUpErrorState(error.toString()));
